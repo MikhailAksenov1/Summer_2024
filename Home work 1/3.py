@@ -1,0 +1,21 @@
+x = float(input())
+y = float(input())
+max_num = -10000
+prev = max_num
+if y!=0:
+  if x // y >= max_num:
+    prev = max_num
+    max_num = x // y
+  if x / y >= max_num:
+    prev = max_num
+    max_num = x / y
+if x + y >= max_num:
+  prev = max_num
+  max_num = x + y
+if x - y >= max_num:
+  prev = max_num
+  max_num = x - y
+if x * y >= max_num:
+  prev = max_num
+  max_num = x * y
+print(prev)
