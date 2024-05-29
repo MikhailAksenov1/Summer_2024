@@ -5,8 +5,10 @@ import openpyxl
 a = openpyxl.load_workbook(filename='file13.xlsx')
 b1 = a.active
 zp = []
-for i in range(1,5):
-    zp.append(b1.cell(i,2).value)
+for i in range(1,b1.max_row):
+    if b1.cell(i,2).value is not None:
+    else:
+        break
 a.create_sheet('результат')
 b2 = a['результат']
 mediana = (zp[len(zp)//2-1]+zp[len(zp)//2])//2
