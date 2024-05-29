@@ -7,6 +7,7 @@ b1 = a.active
 zp = []
 for i in range(1,b1.max_row):
     if b1.cell(i,2).value is not None:
+        zp.append(b1.cell(i,2).value)
     else:
         break
 a.create_sheet('результат')
