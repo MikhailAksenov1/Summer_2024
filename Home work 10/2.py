@@ -9,6 +9,7 @@ s = 0
 for i in range(1,b1.max_row):
     if b1.cell(i,1).value is not None:
         zp.append(b1.cell(i,2).value)
+        s += b1.cell(i,2).value
     else:
         break
 print(sorted(zp, key=lambda f: f[0][1]))
