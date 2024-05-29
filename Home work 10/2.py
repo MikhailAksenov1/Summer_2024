@@ -6,9 +6,10 @@ a = openpyxl.load_workbook(filename='file12.xlsx')
 b1 = a.active
 zp = []
 s = 0
-for i in range(1,4):
-    zp.append((b1.cell(i,1).value, b1.cell(i,2).value))
-    s += b1.cell(i,2).value
+for i in range(1,b1.max_row):
+    if b1.cell(i,1).value is not None:
+    else:
+        break
 print(sorted(zp, key=lambda f: f[0][1]))
 a.create_sheet('n')
 b2 = a['n']
