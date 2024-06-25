@@ -1,0 +1,17 @@
+"""Создайте таблицу book с полями book_id (int), book_title (text),
+book_author (text), publisher_id(int).
+Введите несколько книг нескольких авторов.
+Сделайте несколько SELECT для выборки книг по авторам, по
+названиям."""
+
+
+
+CREATE TABLE book (book_id int, book_title text, book_author text, publisher_id int);
+SELECT * FROM book
+INSERT INTO book VALUES
+(1, 'Война и мир', 'Лев Толстой', 23),
+(2, 'Гарри Поттер', 'Джоан Роулинг', 11),
+(3, 'Претупление и наказание', 'Федор Достоевский', 62),
+(4, 'Python для детей', 'Джейсон Бригс', 165)
+SELECT book_author from book
+SELECT book_title from book
