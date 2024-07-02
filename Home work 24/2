@@ -1,0 +1,10 @@
+"""Создайте запрос, который находит авторов, у которых только
+минимальное количество книг на складе (в таблице book).
+Используйте для этого View."""
+
+select * from book
+CREATE VIEW author as select book_author, amount from book
+select * from author
+CREATE VIEW sum1 as select book_author, SUM(amount) AS sum_amount from author GROUP BY book_author
+select * from sum1
+select min(sum_amount) as min_sum_amount from sum1
