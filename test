@@ -1,0 +1,69 @@
+import dpkt
+import argparse
+from typing import List, Tuple
+
+def parse_pcap(pcap_file: str) -> List[Tuple[float, bytes]]:
+    """
+    Парсинг pcap файла и возврат списка (временная метка, пакет)
+    """
+    packets = []
+    with open(pcap_file, 'rb') as f:
+        pcap = dpkt.pcap.Reader(f)
+        for ts, buf in pcap:
+            packets.append((ts, buf))
+    return packets
+
+def find_matching_intervals(packets1: List[Tuple[float, bytes]], 
+                           packets2: List[Tuple[float, bytes]], 
+                           min_length: int) -> List[Tuple[int, int, float, float]]:
+    """
+    Поиск совпадающих интервалов
+    Возвращает: (индекс начала, длина, ts1, ts2)
+    """
+    matches = []
+    i, j = 0, 0
+    while i < len(packets1) and j < len(packets2):
+        if packets1[i][1] == packets2[j][1]:
+            start_i, start_j = i, j
+            while i < len(packets1) and j < len(packets2) and packets1[i][1] == packets2[j][1]:
+                i += 1
+                j += 1
+            if i - start_i >= min_length:
+                matches.append((start_i, i - start_i, packets1[start_i][0], packets2[start_j][0]))
+        else:
+            if packets1[i][0] < packets2[j][0]:
+                i += 1
+            else:
+                j += 1
+    return matches
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('pcap1', help='Первый pcap файл')
+    parser.add_argument('pcap2', help='Второй pcap файл')
+    parser.add_argument('-m', '--min_length', type=int, default=3, 
+                       help='Минимальное количество последовательных совпадающих пакетов')
+    parser.add_argument('-i', '--intervals', type=int, nargs='+', 
+                       help='Номера интервалов для вывода (нумерация с 1)')
+    args = parser.parse_args()
+    
+    packets1 = parse_pcap(args.pcap1)
+    packets2 = parse_pcap(args.pcap2)
+    
+    matches = find_matching_intervals(packets1, packets2, args.min_length)
+    
+    print(f"Найдено совпадающих интервалов: {len(matches)}")
+    
+    if args.intervals:
+        for interval_num in args.intervals:
+            if 1 <= interval_num <= len(matches):
+                interval = matches[interval_num - 1]
+                print(f"Интервал {interval_num}:")
+                print(f"  Количество совпавших пакетов: {interval[1]}")
+                print(f"  Первый пакет (pcap1): номер {interval[0]+1}, временная метка {interval[2]}")
+                print(f"  Первый пакет (pcap2): номер {interval[0]+1}, временная метка {interval[3]}")
+            else:
+                print(f"Интервал {interval_num} не существует")
+
+if __name__ == "__main__":
+    main()
